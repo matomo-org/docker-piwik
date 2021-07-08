@@ -90,6 +90,14 @@ RUN set -ex; \
 
 COPY php.ini /usr/local/etc/php/conf.d/php-matomo.ini
 
+RUN set -ex; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends unzip; \
+	curl -fsSL -o unifont.ttf.zip \
+		"https://matomo.org/wp-content/uploads/unifont.ttf.zip"; \
+	unzip unifont.ttf.zip -d /usr/src/piwik/plugins/ImageGraph/fonts/; \
+	apt-get purge -y --auto-remove unzip;
+
 COPY docker-entrypoint.sh /entrypoint.sh
 
 # WORKDIR is /var/www/html (inherited via "FROM php")
