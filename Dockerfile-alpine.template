@@ -79,6 +79,16 @@ RUN set -ex; \
 
 COPY php.ini /usr/local/etc/php/conf.d/php-matomo.ini
 
+RUN set -ex; \
+	apk add --no-cache --virtual .fetch-deps unzip; \
+	curl -fsSL -o EnvironmentVariables.zip \
+		"https://plugins.matomo.org/api/2.0/plugins/EnvironmentVariables/download/latest"; \
+	unzip EnvironmentVariables.zip -d /usr/src/piwik/plugins; \
+	apk del .fetch-deps; \
+	rm /usr/src/piwik/plugins/EnvironmentVariables/CHANGELOG.md /usr/src/piwik/plugins/EnvironmentVariables/README.md;
+
+COPY common.config.ini.php /usr/src/piwik/config/common.config.ini.php
+
 COPY docker-entrypoint.sh /entrypoint.sh
 
 # WORKDIR is /var/www/html (inherited via "FROM php")
